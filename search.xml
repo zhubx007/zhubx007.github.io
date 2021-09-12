@@ -27,16 +27,16 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>清华大学 </td>
-<td><a href="https://pypi.tuna.tsinghua.edu.cn/simple">https://pypi.tuna.tsinghua.edu.cn/simple</a></td>
+<td>清华大学</td>
+<td><span class="exturl" data-url="aHR0cHM6Ly9weXBpLnR1bmEudHNpbmdodWEuZWR1LmNuL3NpbXBsZQ=="> https://pypi.tuna.tsinghua.edu.cn/simple<i class="fa fa-external-link-alt"></i></span></td>
 </tr>
 <tr>
-<td> 阿里云 </td>
-<td><a href="http://mirrors.aliyun.com/pypi/simple">http://mirrors.aliyun.com/pypi/simple</a></td>
+<td>阿里云</td>
+<td><span class="exturl" data-url="aHR0cDovL21pcnJvcnMuYWxpeXVuLmNvbS9weXBpL3NpbXBsZQ=="> http://mirrors.aliyun.com/pypi/simple<i class="fa fa-external-link-alt"></i></span></td>
 </tr>
 <tr>
-<td> 豆瓣 </td>
-<td><a href="http://pypi.douban.com/simple">http://pypi.douban.com/simple</a></td>
+<td>豆瓣</td>
+<td><span class="exturl" data-url="aHR0cDovL3B5cGkuZG91YmFuLmNvbS9zaW1wbGU="> http://pypi.douban.com/simple<i class="fa fa-external-link-alt"></i></span></td>
 </tr>
 </tbody></table>
 ]]></content>
