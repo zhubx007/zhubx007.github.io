@@ -18,4 +18,51 @@
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
   </entry>
+  <entry>
+    <title>配置 pip 国内源</title>
+    <url>/2021/09/12/linux/change-pip-index-url/</url>
+    <content><![CDATA[<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><ol>
+<li>创建.pip 目录 </li>
+</ol>
+<figure class="highlight console"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p <span class="variable">$HOME</span>/.pip</span></span><br></pre></td></tr></tbody></table></figure>
+
+<ol start="2">
+<li>写入 pip.conf 配置文件 </li>
+</ol>
+<figure class="highlight console"><table><tbody><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"[global]</span></span></span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple" &gt;$HOME/.pip/pip.conf</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h1><ol>
+<li>在用户目录下，创建 pip 目录，例如 C:\Users\Administrator\pip</li>
+<li> 写入 pip.ini 配置文件，内容如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tbody><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="推荐国内源"><a href="#推荐国内源" class="headerlink" title="推荐国内源"></a>推荐国内源</h1><table>
+<thead>
+<tr>
+<th>源</th>
+<th>地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>清华大学 </td>
+<td><a href="https://pypi.tuna.tsinghua.edu.cn/simple">https://pypi.tuna.tsinghua.edu.cn/simple</a></td>
+</tr>
+<tr>
+<td> 阿里云 </td>
+<td><a href="http://mirrors.aliyun.com/pypi/simple">http://mirrors.aliyun.com/pypi/simple</a></td>
+</tr>
+<tr>
+<td> 豆瓣 </td>
+<td><a href="http://pypi.douban.com/simple">http://pypi.douban.com/simple</a></td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>pip</tag>
+      </tags>
+  </entry>
 </search>
