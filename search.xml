@@ -20,7 +20,7 @@
   </entry>
   <entry>
     <title>配置 pip 国内源</title>
-    <url>/2021/09/12/linux/change-pip-index-url/</url>
+    <url>/2021/09/12/change-pip-index-url/</url>
     <content><![CDATA[<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><ol>
 <li>创建.pip 目录 </li>
 </ol>
