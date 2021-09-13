@@ -1350,7 +1350,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff3945;
+  background: #ff16cc;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -3324,14 +3324,9 @@ ul.breadcrumb li + li:last-child {
                 console.error('Failed to save visitor count', error);
               });
           } else {
-              Counter('post', '/classes/Counter', { title, url, time: 1 })
-                .then(response => response.json())
-                .then(() => {
-                  leancloudSelector(url).innerText = 1;
-                })
-                .catch(error => {
-                  console.error('Failed to create', error);
-                });
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
           }
         })
         .catch(error => {
@@ -3358,7 +3353,7 @@ ul.breadcrumb li + li:last-child {
         });
     }
 
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"RrHBB64bDBuubdoFxkbTTi9e-gzGzoHsz","app_key":"Mon6AI4q4CEaNN8rkz5tiejI","server_url":"https://leancloud.cn","security":false};
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"RrHBB64bDBuubdoFxkbTTi9e-gzGzoHsz","app_key":"Mon6AI4q4CEaNN8rkz5tiejI","server_url":"https://leancloud.cn","security":"treu"};
     function fetchData(api_server) {
       var Counter = (method, url, data) => {
         return fetch(`${api_server}/1.1${url}`, {
