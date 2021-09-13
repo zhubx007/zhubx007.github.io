@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Ceph Bucket Notification(Ceph 存储桶通知)</title>
-    <url>/posts/archives/24828.html/</url>
+    <url>/archives/24828.html/</url>
     <content><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>存储桶通知提供了一种在存储同上发生某些事件时将消息发送到 radosgw 之外的机制。当前，通知可以发送到：HTTP、AMQP 0.9.1 和 Kafka</p>
 <h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="搭建一个-ceph-对象存储集群"><a href="#搭建一个-ceph-对象存储集群" class="headerlink" title="搭建一个 ceph 对象存储集群"></a>搭建一个 ceph 对象存储集群</h2><p>参考 ceph 官方文档搭建：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLmNlcGguY29tL2VuL2xhdGVzdC8=">https://docs.ceph.com/en/latest/<i class="fa fa-external-link-alt"></i></span></p>
 <h2 id="搭建一个简易的-server，提供-API-接收通知"><a href="#搭建一个简易的-server，提供-API-接收通知" class="headerlink" title="搭建一个简易的 server，提供 API 接收通知"></a>搭建一个简易的 server，提供 API 接收通知</h2><blockquote>
@@ -35,7 +35,7 @@
   </entry>
   <entry>
     <title>配置 pip 国内源</title>
-    <url>/posts/archives/39470.html/</url>
+    <url>/archives/39470.html/</url>
     <content><![CDATA[<h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><ol>
 <li>创建.pip目录</li>
 </ol>
