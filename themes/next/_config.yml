@@ -1081,3 +1081,11 @@ darkmode_js:
   label: '🌓' # default: ''
   autoMatchOsTheme: true # default: true
   libUrl: # Set custom library cdn url for Darkmode.js
+
+# hexo-tag-cloud
+tag_cloud:
+    textFont: Trebuchet MS, Helvetica
+    textColor: '#333'
+    textHeight: 25
+    outlineColor: '#E2E1D1'
+    maxSpeed: 0.1
