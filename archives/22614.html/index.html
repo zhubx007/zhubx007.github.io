@@ -21,18 +21,21 @@
     var CONFIG = {"hostname":"zhubx007.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="https://zhubx007.github.io/tags/index.html">
+  <meta name="description" content="获取 bucket id12$ BUCKET_NAME&#x3D;&quot;bucket01&quot;$ BUCKET_ID&#x3D;&#96;radosgw-admin bucket stats --bucket&#x3D;$&amp;#123;BUCKET_NAME&amp;#125; | grep -w id | awk -F &amp;#x27;&quot;&amp;#x27; &amp;#x27;&amp;#123;print $4&amp;#125;&amp;#x27;&#96;  查看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="获取某个 Bucket 下的分片信息">
+<meta property="og:url" content="https://zhubx007.github.io/archives/22614.html/index.html">
 <meta property="og:site_name" content="小兵辣子">
+<meta property="og:description" content="获取 bucket id12$ BUCKET_NAME&#x3D;&quot;bucket01&quot;$ BUCKET_ID&#x3D;&#96;radosgw-admin bucket stats --bucket&#x3D;$&amp;#123;BUCKET_NAME&amp;#125; | grep -w id | awk -F &amp;#x27;&quot;&amp;#x27; &amp;#x27;&amp;#123;print $4&amp;#125;&amp;#x27;&#96;  查看">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-11T14:02:48.000Z">
-<meta property="article:modified_time" content="2021-09-13T15:42:15.870Z">
+<meta property="article:published_time" content="2021-09-14T13:37:18.000Z">
+<meta property="article:modified_time" content="2021-09-14T13:40:35.228Z">
 <meta property="article:author" content="Zhu Boxiang">
-<meta property="article:tag" content="Python OpenStack">
+<meta property="article:tag" content="ceph">
+<meta property="article:tag" content="bucket">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://zhubx007.github.io/tags/">
+<link rel="canonical" href="https://zhubx007.github.io/archives/22614.html/">
 
 
 <script id="page-configurations">
@@ -40,7 +43,7 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
@@ -58,8 +61,7 @@
   padding: 1px 4px;
 }
 </style>
-  <title>标签 | 小兵辣子
-</title>
+  <title>获取某个 Bucket 下的分片信息 | 小兵辣子</title>
   
 
 
@@ -212,90 +214,150 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
-      <header class="post-header">
-
-<h1 class="post-title" itemprop="name headline">标签
-</h1>
-
-<div class="post-meta">
   
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zhubx007.github.io/archives/22614.html/">
 
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Zhu Boxiang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小兵辣子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          获取某个 Bucket 下的分片信息
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-14 21:37:18 / 修改时间：21:40:35" itemprop="dateCreated datePublished" datetime="2021-09-14T21:37:18+08:00">2021-09-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index"><span itemprop="name">ceph</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/22614.html/" class="post-meta-item leancloud_visitors" data-flag-title="获取某个 Bucket 下的分片信息" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>768</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="获取-bucket-id"><a href="#获取-bucket-id" class="headerlink" title="获取 bucket id"></a>获取 bucket id</h1><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_NAME=<span class="string">&quot;bucket01&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_ID=`radosgw-admin bucket stats --bucket=<span class="variable">$&#123;BUCKET_NAME&#125;</span> | grep -w id | awk -F <span class="string">&#x27;&quot;&#x27;</span> <span class="string">&#x27;&#123;print $4&#125;&#x27;</span>`</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="查看-bucket-index-中的-omap-信息"><a href="#查看-bucket-index-中的-omap-信息" class="headerlink" title="查看 bucket.index 中的 omap 信息"></a>查看 bucket.index 中的 omap 信息</h1><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> INDEX_POOL=<span class="string">&quot;default.rgw.buckets.index&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> OBJECT_MAP=<span class="string">&quot;.dir.<span class="variable">$&#123;BUCKET_ID&#125;</span>&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rados -p <span class="variable">$&#123;INDEX_POOL&#125;</span> listomapkeys <span class="variable">$&#123;OBJECT_MAP&#125;</span></span></span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.1</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.2</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.3</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.4</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.meta</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    <div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Zhu Boxiang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://zhubx007.github.io/archives/22614.html/" title="获取某个 Bucket 下的分片信息">https://zhubx007.github.io/archives/22614.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
 </div>
 
-</header>
 
-      
-      
-      
-      <div class="post-body">
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-              目前共计 3 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/bucket/" style="font-size: 12px; color: #ccc">bucket</a> <a href="/tags/ceph/" style="font-size: 30px; color: #111">ceph</a> <a href="/tags/pip/" style="font-size: 12px; color: #ccc">pip</a>
-            </div>
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/ceph/" rel="tag"><i class="fa fa-tag"></i> ceph</a>
+              <a href="/tags/bucket/" rel="tag"><i class="fa fa-tag"></i> bucket</a>
           </div>
-          <script type="text/javascript">
-     var alltags = document.getElementsByClassName('tag-cloud-tags');
-     var tags = alltags[0].getElementsByTagName('a');
-     for (var i = tags.length - 1; i >= 0; i--) {
-       var r=Math.floor(Math.random()*75+130);
-       var g=Math.floor(Math.random()*75+100);
-       var b=Math.floor(Math.random()*75+80);
-       tags[i].style.background = "rgb("+r+","+g+","+b+")";
-     }
-</script>
 
-<style>
-  .tag-cloud-tags{
-    /*font-family: Helvetica, Tahoma, Arial;*/
-    /*font-weight: 100;*/
-    text-align: center;
-    counter-reset: tags;
-  }
-  .tag-cloud-tags a{
-    border-radius: 6px;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin: 8px 5px 0px 0px;
-  }
-  .tag-cloud-tags a:before{
-    content: "🔖";
-  }
-
-  .tag-cloud-tags a:hover{
-     box-shadow: 0px 5px 15px 0px rgba(0,0,0,.4);
-     transform: scale(1.1);
-     /*box-shadow: 10px 10px 15px 2px rgba(0,0,0,.12), 0 0 6px 0 rgba(104, 104, 105, 0.1);*/
-     transition-duration: 0.15s;
-  }
-</style>
         
-      </div>
-      
-      
-      
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
     </div>
-    
+  </div>
 
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/24828.html/" rel="prev" title="Ceph Bucket Notification(Ceph 存储桶通知)">
+      <i class="fa fa-chevron-left"></i> Ceph Bucket Notification(Ceph 存储桶通知)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
     
-    
-    
+  </article>
+  
+  
+  
+
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -342,6 +404,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96-bucket-id"><span class="nav-number">1.</span> <span class="nav-text">获取 bucket id</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-bucket-index-%E4%B8%AD%E7%9A%84-omap-%E4%BF%A1%E6%81%AF"><span class="nav-number">2.</span> <span class="nav-text">查看 bucket.index 中的 omap 信息</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -678,6 +741,25 @@ darkmode.showWidget();
         pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '18e9b322141f91c97b85',
+      clientSecret: 'a930a0b94ccd8e494abd6f171c23fe5b2d92a7df',
+      repo        : 'mygitalk',
+      owner       : 'zhubx007',
+      admin       : ['zhubx007'],
+      id          : 'f56029c0520943a6812966f77bedfd95',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
