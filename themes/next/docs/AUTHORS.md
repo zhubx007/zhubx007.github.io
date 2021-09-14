@@ -6,7 +6,7 @@ NexT theme was initially developed by:
 
 With collaborators from initially repository:
 
-- **Ivan.Nginx**: [DIFF highlight](https://github.com/iissnan/hexo-theme-next/pull/1079),
+<!-- - **Ivan.Nginx**: [DIFF highlight](https://github.com/iissnan/hexo-theme-next/pull/1079),
                   [HyperComments](https://github.com/iissnan/hexo-theme-next/pull/1155),
                   [`{% note %}` tag](https://github.com/iissnan/hexo-theme-next/pull/1160),
                   [`seo` option](https://github.com/iissnan/hexo-theme-next/pull/1311),
@@ -26,7 +26,7 @@ With collaborators from initially repository:
                   [Menu & Sidebar icons in 1 line](https://github.com/iissnan/hexo-theme-next/pull/1830),
                   [Sidebar scrollable](https://github.com/iissnan/hexo-theme-next/pull/1898),
                   [Responsive favicons](https://github.com/iissnan/hexo-theme-next/pull/1898)
-                  and many other [PR's with fixes and enhancements](https://github.com/iissnan/hexo-theme-next/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Aivan-nginx)
+                  and many other [PR's with fixes and enhancements](https://github.com/iissnan/hexo-theme-next/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Aivan-nginx) -->
 - **Acris**: [Many PR's with fixes and updates](https://github.com/iissnan/hexo-theme-next/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3AAcris)
 
 And best contributors from initially repository:
