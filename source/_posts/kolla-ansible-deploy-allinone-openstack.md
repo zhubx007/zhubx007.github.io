@@ -1,12 +1,13 @@
 ---
 title: CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One
-date: 2021-09-15 22:44:34
 tags:
-- centos
-- kolla-ansible
-- openstack
+  - centos
+  - kolla-ansible
+  - openstack
 categories:
-- openstack
+  - openstack
+abbrlink: 60765
+date: 2021-09-15 22:44:34
 ---
 
 ## 准备
