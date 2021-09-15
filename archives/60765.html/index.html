@@ -21,26 +21,36 @@
     var CONFIG = {"hostname":"www.iseeyou.run","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="人生苦短，我学 Python">
-<meta property="og:type" content="website">
-<meta property="og:title" content="小兵辣子">
-<meta property="og:url" content="http://www.iseeyou.run/index.html">
+  <meta name="description" content="准备  系统：CentOS 7 两块网卡： eth0：172.16.140.15   管理网 eth1：192.168.1.16    业务网&#x2F;存储网   CPU：8C 内存：16G 系统盘：50G Ceph OSD 盘：100G  安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One">
+<meta property="og:url" content="http://www.iseeyou.run/archives/60765.html/index.html">
 <meta property="og:site_name" content="小兵辣子">
-<meta property="og:description" content="人生苦短，我学 Python">
+<meta property="og:description" content="准备  系统：CentOS 7 两块网卡： eth0：172.16.140.15   管理网 eth1：192.168.1.16    业务网&#x2F;存储网   CPU：8C 内存：16G 系统盘：50G Ceph OSD 盘：100G  安装">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200205200301456.png">
+<meta property="og:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200206091856874.png">
+<meta property="og:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200206093551617.png">
+<meta property="og:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2020020609392174.png">
+<meta property="og:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200206094121956.png">
+<meta property="article:published_time" content="2021-09-15T14:44:34.000Z">
+<meta property="article:modified_time" content="2021-09-15T15:04:54.305Z">
 <meta property="article:author" content="Zhu Boxiang">
-<meta property="article:tag" content="Python OpenStack">
+<meta property="article:tag" content="centos">
+<meta property="article:tag" content="kolla-ansible">
+<meta property="article:tag" content="openstack">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200205200301456.png">
 
-<link rel="canonical" href="http://www.iseeyou.run/">
+<link rel="canonical" href="http://www.iseeyou.run/archives/60765.html/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
@@ -58,7 +68,7 @@
   padding: 1px 4px;
 }
 </style>
-  <title>小兵辣子</title>
+  <title>CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One | 小兵辣子</title>
   
 
 
@@ -212,9 +222,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -230,10 +241,9 @@
       <meta itemprop="name" content="小兵辣子">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/archives/60765.html/" class="post-title-link" itemprop="url">CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -287,7 +297,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><hr>
+        <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><hr>
 <ul>
 <li>系统：CentOS 7</li>
 <li>两块网卡：<ul>
@@ -301,345 +311,156 @@
 <li>Ceph OSD 盘：100G</li>
 </ul>
 <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/archives/60765.html/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.iseeyou.run/archives/22614.html/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Zhu Boxiang">
-      <meta itemprop="description" content="人生苦短，我学 Python">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小兵辣子">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/archives/22614.html/" class="post-title-link" itemprop="url">获取某个 Bucket 下的分片信息</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-14 21:37:18" itemprop="dateCreated datePublished" datetime="2021-09-14T21:37:18+08:00">2021-09-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-15 22:12:31" itemprop="dateModified" datetime="2021-09-15T22:12:31+08:00">2021-09-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ceph/" itemprop="url" rel="index"><span itemprop="name">ceph</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/archives/22614.html/" class="post-meta-item leancloud_visitors" data-flag-title="获取某个 Bucket 下的分片信息" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>768</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="获取-bucket-id"><a href="#获取-bucket-id" class="headerlink" title="获取 bucket id"></a>获取 bucket id</h1><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_NAME=<span class="string">&quot;bucket01&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_ID=`radosgw-admin bucket stats --bucket=<span class="variable">$&#123;BUCKET_NAME&#125;</span> | grep -w id | awk -F <span class="string">&#x27;&quot;&#x27;</span> <span class="string">&#x27;&#123;print $4&#125;&#x27;</span>`</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="查看-bucket-index-中的-omap-信息"><a href="#查看-bucket-index-中的-omap-信息" class="headerlink" title="查看 bucket.index 中的 omap 信息"></a>查看 bucket.index 中的 omap 信息</h1><figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> INDEX_POOL=<span class="string">&quot;default.rgw.buckets.index&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> OBJECT_MAP=<span class="string">&quot;.dir.<span class="variable">$&#123;BUCKET_ID&#125;</span>&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rados -p <span class="variable">$&#123;INDEX_POOL&#125;</span> listomapkeys <span class="variable">$&#123;OBJECT_MAP&#125;</span></span></span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.1</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.2</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.3</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.4</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.meta</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.iseeyou.run/archives/24828.html/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Zhu Boxiang">
-      <meta itemprop="description" content="人生苦短，我学 Python">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小兵辣子">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/archives/24828.html/" class="post-title-link" itemprop="url">Ceph Bucket Notification(Ceph 存储桶通知)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-13 08:22:19" itemprop="dateCreated datePublished" datetime="2021-09-13T08:22:19+08:00">2021-09-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-15 22:12:30" itemprop="dateModified" datetime="2021-09-15T22:12:30+08:00">2021-09-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ceph/" itemprop="url" rel="index"><span itemprop="name">ceph</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/archives/24828.html/" class="post-meta-item leancloud_visitors" data-flag-title="Ceph Bucket Notification(Ceph 存储桶通知)" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>8 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>存储桶通知提供了一种在存储同上发生某些事件时将消息发送到 radosgw 之外的机制。当前，通知可以发送到：HTTP、AMQP 0.9.1 和 Kafka</p>
-<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="搭建一个-ceph-对象存储集群"><a href="#搭建一个-ceph-对象存储集群" class="headerlink" title="搭建一个 ceph 对象存储集群"></a>搭建一个 ceph 对象存储集群</h2><p>参考 ceph 官方文档搭建：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLmNlcGguY29tL2VuL2xhdGVzdC8=">https://docs.ceph.com/en/latest/<i class="fa fa-external-link-alt"></i></span></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/archives/24828.html/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.iseeyou.run/archives/39470.html/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Zhu Boxiang">
-      <meta itemprop="description" content="人生苦短，我学 Python">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小兵辣子">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/archives/39470.html/" class="post-title-link" itemprop="url">配置 pip 国内源</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-12 15:56:05" itemprop="dateCreated datePublished" datetime="2021-09-12T15:56:05+08:00">2021-09-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-15 22:12:30" itemprop="dateModified" datetime="2021-09-15T22:12:30+08:00">2021-09-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/archives/39470.html/" class="post-meta-item leancloud_visitors" data-flag-title="配置 pip 国内源" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span><br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>398</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><ol>
-<li>创建.pip目录</li>
+<p><code>NOTE：整个安装过程，并没有使用 python 虚拟环境。</code></p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><ol>
+<li><p>安装 <code>python</code> 构建依赖</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo yum install python-devel libffi-devel gcc openssl-devel libselinux-python -y</span></span><br></pre></td></tr></table></figure></li>
+<li><p>安装 <code>pip</code></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo easy_install pip</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pip install -U pip</span></span><br></pre></td></tr></table></figure></li>
+<li><p>安装 <code>ansible &gt;=2.8</code></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo yum install epel-release -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo yum install ansible -y</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p <span class="variable">$HOME</span>/.pip</span></span><br></pre></td></tr></table></figure>
+<h3 id="安装-kolla-ansible"><a href="#安装-kolla-ansible" class="headerlink" title="安装 kolla-ansible"></a>安装 kolla-ansible</h3><ol>
+<li><p>使用 <code>pip</code> 安装 <code>kolla-ansible</code></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo pip install kolla-ansible</span></span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>写入pip.conf配置文件</li>
+<p> <strong>如果出现以下情况</strong></p>
+<p> <img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200205200301456.png" alt="安装kolla-ansible失败"></p>
+<p> 则需要使用命令 <code>sudo pip install kolla-ansible -I</code></p>
+</li>
+<li><p>创建 <code>/etc/kolla</code> 目录</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo mkdir -p /etc/kolla</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo chown <span class="variable">$USER</span>:<span class="variable">$USER</span> /etc/kolla</span></span><br></pre></td></tr></table></figure></li>
+<li><p>拷贝 <code>globals.yml</code> 和 <code>passwords.yml</code> 到 <code>/etc/kolla</code> 目录下</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cp -r /usr/share/kolla-ansible/etc_examples/kolla/* /etc/kolla</span></span><br></pre></td></tr></table></figure></li>
+<li><p>拷贝 <code>all-in-one</code> 和 <code>multinode</code> 文件到当前目录下</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cp /usr/share/kolla-ansible/ansible/inventory/* .</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">&quot;[global]</span></span></span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple&quot; &gt;$HOME/.pip/pip.conf</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/archives/39470.html/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+<h3 id="配置-ansible"><a href="#配置-ansible" class="headerlink" title="配置 ansible"></a>配置 ansible</h3><p>修改配置文件 <strong>/etc/ansible/ansible.cfg</strong> ，在 <strong>defaults</strong> 段中增加如下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[defaults]</span><br><span class="line">host_key_checking=False</span><br><span class="line">pipelining=True</span><br><span class="line">forks=100</span><br></pre></td></tr></table></figure>
+
+<h3 id="准备初始化配置"><a href="#准备初始化配置" class="headerlink" title="准备初始化配置"></a>准备初始化配置</h3><p><code>由于安装的All-In-One模式，所以直接使用文件all-in-one即可。</code></p>
+<ol>
+<li><p>检查使用文件 <code>all-in-one</code> 时，执行 <code>ansible</code> 的连通性</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ansible -i all-in-one all -m ping</span></span><br></pre></td></tr></table></figure></li>
+<li><p>生成密码</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kolla-genpwd</span></span><br></pre></td></tr></table></figure></li>
+<li><p>修改 <code>/etc/kolla/globals.yml</code> 配置文件，修改内容如下</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kolla_base_distro: &quot;centos&quot;</span><br><span class="line">kolla_install_type: &quot;binary&quot;</span><br><span class="line">openstack_release: &quot;train&quot;</span><br><span class="line">network_interface: &quot;eth0&quot;</span><br><span class="line">neutron_external_interface: &quot;eth1&quot;</span><br><span class="line">kolla_internal_vip_address: &quot;172.16.140.15&quot;</span><br><span class="line">enable_haproxy: &quot;no&quot;</span><br><span class="line">enable_cinder: &quot;yes&quot;</span><br><span class="line">enable_ceph: &quot;yes&quot;</span><br></pre></td></tr></table></figure></li>
+<li><p>由于使用 <code>ceph</code> 作为后端存储，所以在准备阶段，需要额外准备一块磁盘作为 <code>OSD</code> ，以下命令是为了在执行 <code>ansible</code> 脚本时，能识别此分区作为 <code>OSD</code></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> DISK=/dev/vdb</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> parted <span class="variable">$DISK</span> -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP_BS 1 -1</span></span><br></pre></td></tr></table></figure>
+
+<p> 因为只有一台服务器作为 <code>All-In-One</code> 部署，所以对于 <code>ceph</code> 的配置需要先做预处理，将 <code>pool</code> 的 <code>size</code> 置为 1。新建目录 <code>/etc/kolla/config</code> ，然后在目录下创建配置文件 <code>ceph.conf</code> ，内容如下</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">osd pool default size = 1</span><br><span class="line">osd pool default min size = 1</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="开始部署"><a href="#开始部署" class="headerlink" title="开始部署"></a>开始部署</h3><ol>
+<li><p>完成带有 <code>kolla</code> 部署依赖的引导服务准备</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kolla-ansible -i ./all-in-one bootstrap-servers</span></span><br></pre></td></tr></table></figure></li>
+<li><p>部署前的预检测</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kolla-ansible -i ./all-in-one prechecks</span></span><br></pre></td></tr></table></figure></li>
+<li><p>开始部署</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kolla-ansible -i ./all-in-one deploy</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><hr>
+<ol>
+<li><p>安装 <code>OpenStack CLI</code> 客户端</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install python-openstackclient</span></span><br></pre></td></tr></table></figure></li>
+<li><p>生成 <code>admin-openrc.sh</code> 文件</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt; kolla-ansible post-deploy</span></span><br></pre></td></tr></table></figure>
+
+<p> 启用环境变量</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> . /etc/kolla/admin-openrc.sh</span></span><br></pre></td></tr></table></figure></li>
+<li><p>获取 <code>cirros</code> 镜像</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img</span></span><br></pre></td></tr></table></figure>
+
+<p> 如果没有 <code>wget</code> 工具，使用一下命令安装</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo yum install wget -y</span></span><br></pre></td></tr></table></figure></li>
+<li><p>上传 <code>cirros</code> 镜像</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack image create cirros-0.4.0-x86_64-disk.img --container-format bare --disk-format qcow2 --file cirros-0.4.0-x86_64-disk.img</span></span><br></pre></td></tr></table></figure>
+
+<p> 查看上传的镜像</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack image list</span></span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200206091856874.png" alt="images列表"></p>
+</li>
+<li><p>创建 <code>private</code> 网络</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack network create private</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack subnet create net --subnet-range 10.0.0.0/24 --gateway 10.0.0.1 --network 2c428b82-023e-4788-b37a-077e0effd2cc</span></span><br></pre></td></tr></table></figure></li>
+<li><p>创建 <code>flavor</code></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack flavor create 1C1G10G --id 1 --ram 1024 --disk 10 --vcpus 1</span></span><br></pre></td></tr></table></figure></li>
+<li><p>创建虚拟机</p>
+<p> 准备工作完成</p>
+<p> <img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200206093551617.png" alt="ready"></p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack server create vm01 --image 46c1d789-f213-4fbd-bc8c-540a4194fab0 --flavor 1 --network 2c428b82-023e-4788-b37a-077e0effd2cc</span></span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2020020609392174.png" alt="servers 列表"></p>
+<p> <img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/20200206094121956.png" alt="虚拟机 console"></p>
+</li>
+</ol>
+
     </div>
 
     
     
-    
+    <div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Zhu Boxiang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.iseeyou.run/archives/60765.html/" title="CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One">http://www.iseeyou.run/archives/60765.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          
+          <div class="post-tags">
+              <a href="/tags/centos/" rel="tag"><i class="fa fa-tag"></i> centos</a>
+              <a href="/tags/kolla-ansible/" rel="tag"><i class="fa fa-tag"></i> kolla-ansible</a>
+              <a href="/tags/openstack/" rel="tag"><i class="fa fa-tag"></i> openstack</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/22614.html/" rel="prev" title="获取某个 Bucket 下的分片信息">
+      <i class="fa fa-chevron-left"></i> 获取某个 Bucket 下的分片信息
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -686,6 +507,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">2.1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-kolla-ansible"><span class="nav-number">2.2.</span> <span class="nav-text">安装 kolla-ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE-ansible"><span class="nav-number">2.3.</span> <span class="nav-text">配置 ansible</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="nav-number">2.4.</span> <span class="nav-text">准备初始化配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E9%83%A8%E7%BD%B2"><span class="nav-number">2.5.</span> <span class="nav-text">开始部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81"><span class="nav-number">3.</span> <span class="nav-text">验证</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -1022,6 +844,25 @@ darkmode.showWidget();
         pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
       new needShareButton('#needsharebutton-postbottom', pbOptions);
   </script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '18e9b322141f91c97b85',
+      clientSecret: 'a930a0b94ccd8e494abd6f171c23fe5b2d92a7df',
+      repo        : 'mygitalk',
+      owner       : 'zhubx007',
+      admin       : ['zhubx007'],
+      id          : '87a33e338a74f1fb0eac38dd1f8f0f3d',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
