@@ -239,5 +239,12 @@
 
 <h3 id="curl-API"><a href="#curl-API" class="headerlink" title="curl API"></a>curl API</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="comment"># 首先 source &lt;openrc-file&gt;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> TOKEN=`openstack token issue -f value -c id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -g -i -X POST &lt;cinder-endpoint&gt;/v3/&lt;project-id&gt;/volumes \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Accept: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;X-Auth-Token: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> \</span></span><br><span class="line"><span class="bash">-d <span class="string">&#x27;</span></span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;volume&quot;: &#123;</span><br><span class="line">        &quot;size&quot;: 10,</span><br><span class="line">        &quot;name&quot;: &quot;testvol&quot;,</span><br><span class="line">        &quot;description&quot;: &quot;testvol&quot;,</span><br><span class="line">        &quot;volume_type&quot;: &quot;__DEFAULT__&quot;,</span><br><span class="line">        &quot;availability_zone&quot;: &quot;nova&quot;,</span><br><span class="line">        &quot;metadata&quot;: &#123;</span><br><span class="line">            &quot;key01&quot;: &quot;value01&quot;,</span><br><span class="line">            &quot;key02&quot;: &quot;value02&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#x27;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <categories>
+        <category>openstack</category>
+      </categories>
+      <tags>
+        <tag>openstack</tag>
+        <tag>cinder</tag>
+      </tags>
   </entry>
 </search>
