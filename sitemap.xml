@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.iseeyou.run/archives/24690.html/</loc>
+    
+    <lastmod>2021-09-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.iseeyou.run/archives/60765.html/</loc>
     
     <lastmod>2021-09-15</lastmod>
@@ -17,6 +24,13 @@
   
   <url>
     <loc>http://www.iseeyou.run/google5bf593d72b163ad2.html</loc>
+    
+    <lastmod>2021-09-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.iseeyou.run/hot/index.html</loc>
     
     <lastmod>2021-09-15</lastmod>
     
@@ -57,17 +71,10 @@
     
   </url>
   
-  <url>
-    <loc>http://www.iseeyou.run/hot/index.html</loc>
-    
-    <lastmod>2021-09-15</lastmod>
-    
-  </url>
-  
 
   <url>
     <loc>http://www.iseeyou.run/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -75,42 +82,42 @@
   
   <url>
     <loc>http://www.iseeyou.run/tags/ceph/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/tags/pip/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/tags/bucket/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/tags/centos/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/tags/kolla-ansible/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/tags/openstack/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -119,21 +126,21 @@
   
   <url>
     <loc>http://www.iseeyou.run/categories/ceph/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/categories/linux/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://www.iseeyou.run/categories/openstack/</loc>
-    <lastmod>2021-09-15</lastmod>
+    <lastmod>2021-09-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
