@@ -1,11 +1,12 @@
 ---
 title: Makefile 中的 Shell 变量设置
-date: 2021-09-17 14:18:34
 tags:
-- linux
-- makefile
+  - linux
+  - makefile
 categories:
-- linux
+  - linux
+abbrlink: 48427
+date: 2021-09-17 14:18:34
 ---
 
 ## 错误方式
