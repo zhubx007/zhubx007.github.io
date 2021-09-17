@@ -207,47 +207,6 @@
       </tags>
   </entry>
   <entry>
-    <title>创建云硬盘（01）</title>
-    <url>/archives/24690.html/</url>
-    <content><![CDATA[<p><strong>非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。</strong></p>
-<p><strong>本文主要介绍创建一块空的云硬盘。</strong></p>
-<h2 id="OpenStack-环境"><a href="#OpenStack-环境" class="headerlink" title="OpenStack 环境"></a>OpenStack 环境</h2><p>安装可以参考官方文档进行搭建：</p>
-<ul>
-<li>通过 <code>kolla-ansible</code> 进行容器化部署：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcva29sbGEtYW5zaWJsZS9sYXRlc3Qv">https://docs.openstack.org/kolla-ansible/latest/<i class="fa fa-external-link-alt"></i></span></li>
-<li>通过 <code>devstack</code> 进行开发式部署：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcvZGV2c3RhY2svbGF0ZXN0Lw==">https://docs.openstack.org/devstack/latest/<i class="fa fa-external-link-alt"></i></span></li>
-</ul>
-<p>命令行工具，通过 <code>pip</code> 进行安装：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install python-openstackclient</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack --version</span></span><br><span class="line">openstack 5.6.0</span><br></pre></td></tr></table></figure>
-
-<h2 id="命令行方式"><a href="#命令行方式" class="headerlink" title="命令行方式"></a>命令行方式</h2><h3 id="使用-help-命令查看参数"><a href="#使用-help-命令查看参数" class="headerlink" title="使用 help 命令查看参数"></a>使用 help 命令查看参数</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack <span class="built_in">help</span> volume create</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2021-09-16_182117.png" alt="openstack help volume create"></p>
-<h3 id="参数详解"><a href="#参数详解" class="headerlink" title="参数详解"></a>参数详解</h3><ul>
-<li>&lt;name&gt;: 云硬盘名称</li>
-<li>–size: 设置云硬盘的大小，单位为 GiB</li>
-<li>–type: 设置云硬盘的类型</li>
-<li>–description: 描述信息</li>
-<li>–availability-zone: 目标 AZ</li>
-<li>–property: 设置云硬盘属性，可以使用多次 <code>--property</code> 进行多个设置</li>
-</ul>
-<h3 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="comment"># 首先 source &lt;openrc-file&gt;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack volume create &lt;name&gt; --size &lt;size&gt; --<span class="built_in">type</span> &lt;volume-type&gt; --description &lt;description&gt; --availability-zone &lt;availability-zone&gt; --property &lt;key01&gt;=&lt;value01&gt; --property &lt;key02&gt;=&lt;value02&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="RESTful-API-方式"><a href="#RESTful-API-方式" class="headerlink" title="RESTful API 方式"></a>RESTful API 方式</h2><h3 id="API-详解"><a href="#API-详解" class="headerlink" title="API 详解"></a>API 详解</h3><p>API doc: <span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcvYXBpLXJlZi9ibG9jay1zdG9yYWdlL3YzL2luZGV4Lmh0bWwjY3JlYXRlLWEtdm9sdW1l">https://docs.openstack.org/api-ref/block-storage/v3/index.html#create-a-volume<i class="fa fa-external-link-alt"></i></span></p>
-<p>API: <code>/v3/&#123;project_id&#125;/volumes</code></p>
-<p>Request Body:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;volume&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="number">10</span>,</span><br><span class="line">        <span class="attr">&quot;volume_type&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;availability_zone&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;metadata&quot;</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="curl-API"><a href="#curl-API" class="headerlink" title="curl API"></a>curl API</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="comment"># 首先 source &lt;openrc-file&gt;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> TOKEN=`openstack token issue -f value -c id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -g -i -X POST &lt;cinder-endpoint&gt;/v3/&lt;project-id&gt;/volumes \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Accept: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;X-Auth-Token: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> \</span></span><br><span class="line"><span class="bash">-d <span class="string">&#x27;</span></span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;volume&quot;: &#123;</span><br><span class="line">        &quot;size&quot;: 10,</span><br><span class="line">        &quot;name&quot;: &quot;testvol&quot;,</span><br><span class="line">        &quot;description&quot;: &quot;testvol&quot;,</span><br><span class="line">        &quot;volume_type&quot;: &quot;__DEFAULT__&quot;,</span><br><span class="line">        &quot;availability_zone&quot;: &quot;nova&quot;,</span><br><span class="line">        &quot;metadata&quot;: &#123;</span><br><span class="line">            &quot;key01&quot;: &quot;value01&quot;,</span><br><span class="line">            &quot;key02&quot;: &quot;value02&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#x27;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>openstack</category>
-      </categories>
-      <tags>
-        <tag>openstack</tag>
-        <tag>cinder</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Makefile 中的 Shell 变量设置</title>
     <url>/archives/48427.html/</url>
     <content><![CDATA[<h2 id="错误方式"><a href="#错误方式" class="headerlink" title="错误方式"></a>错误方式</h2><ul>
@@ -287,6 +246,47 @@
       <tags>
         <tag>linux</tag>
         <tag>makefile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>创建云硬盘（01）</title>
+    <url>/archives/24690.html/</url>
+    <content><![CDATA[<p><strong>非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。</strong></p>
+<p><strong>本文主要介绍创建一块空的云硬盘。</strong></p>
+<h2 id="OpenStack-环境"><a href="#OpenStack-环境" class="headerlink" title="OpenStack 环境"></a>OpenStack 环境</h2><p>安装可以参考官方文档进行搭建：</p>
+<ul>
+<li>通过 <code>kolla-ansible</code> 进行容器化部署：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcva29sbGEtYW5zaWJsZS9sYXRlc3Qv">https://docs.openstack.org/kolla-ansible/latest/<i class="fa fa-external-link-alt"></i></span></li>
+<li>通过 <code>devstack</code> 进行开发式部署：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcvZGV2c3RhY2svbGF0ZXN0Lw==">https://docs.openstack.org/devstack/latest/<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+<p>命令行工具，通过 <code>pip</code> 进行安装：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install python-openstackclient</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack --version</span></span><br><span class="line">openstack 5.6.0</span><br></pre></td></tr></table></figure>
+
+<h2 id="命令行方式"><a href="#命令行方式" class="headerlink" title="命令行方式"></a>命令行方式</h2><h3 id="使用-help-命令查看参数"><a href="#使用-help-命令查看参数" class="headerlink" title="使用 help 命令查看参数"></a>使用 help 命令查看参数</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack <span class="built_in">help</span> volume create</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2021-09-16_182117.png" alt="openstack help volume create"></p>
+<h3 id="参数详解"><a href="#参数详解" class="headerlink" title="参数详解"></a>参数详解</h3><ul>
+<li>&lt;name&gt;: 云硬盘名称</li>
+<li>–size: 设置云硬盘的大小，单位为 GiB</li>
+<li>–type: 设置云硬盘的类型</li>
+<li>–description: 描述信息</li>
+<li>–availability-zone: 目标 AZ</li>
+<li>–property: 设置云硬盘属性，可以使用多次 <code>--property</code> 进行多个设置</li>
+</ul>
+<h3 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="comment"># 首先 source &lt;openrc-file&gt;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack volume create &lt;name&gt; --size &lt;size&gt; --<span class="built_in">type</span> &lt;volume-type&gt; --description &lt;description&gt; --availability-zone &lt;availability-zone&gt; --property &lt;key01&gt;=&lt;value01&gt; --property &lt;key02&gt;=&lt;value02&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="RESTful-API-方式"><a href="#RESTful-API-方式" class="headerlink" title="RESTful API 方式"></a>RESTful API 方式</h2><h3 id="API-详解"><a href="#API-详解" class="headerlink" title="API 详解"></a>API 详解</h3><p>API doc: <span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcvYXBpLXJlZi9ibG9jay1zdG9yYWdlL3YzL2luZGV4Lmh0bWwjY3JlYXRlLWEtdm9sdW1l">https://docs.openstack.org/api-ref/block-storage/v3/index.html#create-a-volume<i class="fa fa-external-link-alt"></i></span></p>
+<p>API: <code>/v3/&#123;project_id&#125;/volumes</code></p>
+<p>Request Body:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;volume&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="number">10</span>,</span><br><span class="line">        <span class="attr">&quot;volume_type&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;availability_zone&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;metadata&quot;</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="curl-API"><a href="#curl-API" class="headerlink" title="curl API"></a>curl API</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="comment"># 首先 source &lt;openrc-file&gt;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> TOKEN=`openstack token issue -f value -c id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -g -i -X POST &lt;cinder-endpoint&gt;/v3/&lt;project-id&gt;/volumes \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Accept: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;X-Auth-Token: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> \</span></span><br><span class="line"><span class="bash">-d <span class="string">&#x27;</span></span></span><br><span class="line">&#123;</span><br><span class="line">    &quot;volume&quot;: &#123;</span><br><span class="line">        &quot;size&quot;: 10,</span><br><span class="line">        &quot;name&quot;: &quot;testvol&quot;,</span><br><span class="line">        &quot;description&quot;: &quot;testvol&quot;,</span><br><span class="line">        &quot;volume_type&quot;: &quot;__DEFAULT__&quot;,</span><br><span class="line">        &quot;availability_zone&quot;: &quot;nova&quot;,</span><br><span class="line">        &quot;metadata&quot;: &#123;</span><br><span class="line">            &quot;key01&quot;: &quot;value01&quot;,</span><br><span class="line">            &quot;key02&quot;: &quot;value02&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#x27;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>openstack</category>
+      </categories>
+      <tags>
+        <tag>openstack</tag>
+        <tag>cinder</tag>
       </tags>
   </entry>
 </search>
