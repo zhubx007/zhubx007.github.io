@@ -207,7 +207,7 @@
       </tags>
   </entry>
   <entry>
-    <title>创建云硬盘 - 01</title>
+    <title>创建云硬盘（01）</title>
     <url>/archives/24690.html/</url>
     <content><![CDATA[<p><strong>非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。</strong></p>
 <p><strong>本文主要介绍创建一块空的云硬盘。</strong></p>
@@ -245,6 +245,48 @@
       <tags>
         <tag>openstack</tag>
         <tag>cinder</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Makefile 中的 Shell 变量设置</title>
+    <url>/archives/48427.html/</url>
+    <content><![CDATA[<h2 id="错误方式"><a href="#错误方式" class="headerlink" title="错误方式"></a>错误方式</h2><ul>
+<li>新建一个名为 <code>Makefile</code> 的文件，内容如下：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.PHONY: example</span><br><span class="line">example:</span><br><span class="line">	key=1</span><br><span class="line">	echo $$key</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行命令 <code>make example</code>，输出结果如下：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">key=1</span><br><span class="line">echo $key</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从上面发现，定义的变量 <code>key</code>，在使用 <code>echo</code> 输出时，并没有按预期给出值 <code>1</code>，这是为什么呢？</li>
+</ul>
+<p><strong>原因：<code>Makefile</code> 文件中的 <code>shell</code> 定义的变量不支持跨行传递，也就是上面行定义的变量，在换行之后，无法读取。</strong></p>
+<blockquote>
+<p>既然原因找到了，那么正确的方式应该如何呢？参考下面的章节。</p>
+</blockquote>
+<h2 id="正确方式"><a href="#正确方式" class="headerlink" title="正确方式"></a>正确方式</h2><ul>
+<li>将原先 <code>Makefile</code> 文件中的内容，修改为如下：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.PHONY: example</span><br><span class="line">example:</span><br><span class="line">	key=1; \</span><br><span class="line">	echo $$key</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行命令 <code>make example</code>，输出结果如下：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">key=1;\</span><br><span class="line">echo $key</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当然上述也可以将 <code>shell</code> 中的放在一行，例如：<code>key=1; echo $key</code> 即可</li>
+</ul>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>makefile</tag>
       </tags>
   </entry>
 </search>
