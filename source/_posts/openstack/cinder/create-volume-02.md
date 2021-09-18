@@ -1,7 +1,6 @@
 ---
-title: 创建云硬盘（01）
-abbrlink: 24690
-date: 2021-09-16 20:59:34
+title: 创建云硬盘（02）
+date: 2021-09-18 17:30:15
 tags:
 - cinder
 - openstack
@@ -11,7 +10,7 @@ categories:
 
 **非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。**
 
-**本文主要介绍创建一块空云硬盘。**
+**本文主要介绍从镜像创建云硬盘。**
 
 ## OpenStack 环境
 
@@ -43,6 +42,7 @@ $ openstack help volume create
 - \<name\>: 云硬盘名称
 - --size: 设置云硬盘的大小，单位为 GiB
 - --type: 设置云硬盘的类型
+- --image: 镜像名称或者 ID
 - --description: 描述信息
 - --availability-zone: 目标 AZ
 - --property: 设置云硬盘属性，可以使用多次 `--property` 进行多个设置
@@ -52,8 +52,8 @@ $ openstack help volume create
 ```shell
 $ source /etc/kolla/admin-openrc.sh
 $ VOLUME_TYPE_NAME="__DEFAULT__"
-$ VOLUME_TYPE_ID=`openstack volume type show ${VOLUME_TYPE_NAME} -f value -c id`
-$ openstack volume create testvolume01 --size 10 --type ${VOLUME_TYPE_ID} --description "test volume01" --availability-zone nova --property key01=value01 --property key02=value02
+$ IMAGE_NAME="cirros"
+$ openstack volume create testvolume01 --size 10 --type ${VOLUME_TYPE_NAME} --image ${IMAGE_NAME} --description "test volume01" --availability-zone nova --property key01=value01 --property key02=value02
 +---------------------+--------------------------------------+
 | Field               | Value                                |
 +---------------------+--------------------------------------+
@@ -61,10 +61,10 @@ $ openstack volume create testvolume01 --size 10 --type ${VOLUME_TYPE_ID} --desc
 | availability_zone   | nova                                 |
 | bootable            | false                                |
 | consistencygroup_id | None                                 |
-| created_at          | 2021-09-18T10:11:52.000000           |
+| created_at          | 2021-09-18T10:09:02.000000           |
 | description         | test volume01                        |
 | encrypted           | False                                |
-| id                  | f04a03b9-58b8-4e42-b2af-e0056e8aa322 |
+| id                  | 33461e06-28d1-4a8f-8c6b-09b6e1ade56f |
 | migration_status    | None                                 |
 | multiattach         | False                                |
 | name                | testvolume01                         |
@@ -78,18 +78,18 @@ $ openstack volume create testvolume01 --size 10 --type ${VOLUME_TYPE_ID} --desc
 | updated_at          | None                                 |
 | user_id             | 25a3a9d49b914af087aee7b56e2b9d37     |
 +---------------------+--------------------------------------+
-$ openstack volume show f04a03b9-58b8-4e42-b2af-e0056e8aa322 -f json | jq
+$ openstack volume show 33461e06-28d1-4a8f-8c6b-09b6e1ade56f -f json | jq
 ```
 ```json
 {
   "attachments": [],
   "availability_zone": "nova",
-  "bootable": "false",
+  "bootable": "true",
   "consistencygroup_id": null,
-  "created_at": "2021-09-18T10:11:52.000000",
+  "created_at": "2021-09-18T10:09:02.000000",
   "description": "test volume01",
   "encrypted": false,
-  "id": "f04a03b9-58b8-4e42-b2af-e0056e8aa322",
+  "id": "33461e06-28d1-4a8f-8c6b-09b6e1ade56f",
   "migration_status": null,
   "multiattach": false,
   "name": "testvolume01",
@@ -107,8 +107,26 @@ $ openstack volume show f04a03b9-58b8-4e42-b2af-e0056e8aa322 -f json | jq
   "source_volid": null,
   "status": "available",
   "type": "__DEFAULT__",
-  "updated_at": "2021-09-18T10:11:53.000000",
-  "user_id": "25a3a9d49b914af087aee7b56e2b9d37"
+  "updated_at": "2021-09-18T10:09:04.000000",
+  "user_id": "25a3a9d49b914af087aee7b56e2b9d37",
+  "volume_image_metadata": {
+    "container_format": "bare",
+    "hw_qemu_guest_agent": "no",
+    "owner_specified.openstack.sha256": "63c6e014a024dcc20ec66d11ecbd6c36dd609ff3b6dfaa05cf7d4502614a6923",
+    "image_name": "cirros",
+    "image_id": "4dea6e72-1abf-44a5-87f9-64d3b4172bef",
+    "min_disk": "0",
+    "usage_type": "common",
+    "size": "41126400",
+    "os_distro": "others",
+    "image_type": "image",
+    "checksum": "56730d3091a764d5f8b38feeef0bfcef",
+    "disk_format": "raw",
+    "os_admin_user": "root",
+    "owner_specified.openstack.md5": "56730d3091a764d5f8b38feeef0bfcef",
+    "owner_specified.openstack.object": "images/cirros",
+    "min_ram": "0"
+  }
 }
 ```
 
@@ -128,6 +146,7 @@ Request Body:
         "name": "",
         "size": 10,
         "volume_type": "",
+        "imageRef": "",
         "description": "",
         "availability_zone": "",
         "metadata": {}
@@ -141,6 +160,8 @@ Request Body:
 $ source /etc/kolla/admin-openrc.sh
 $ VOLUME_TYPE_NAME="__DEFAULT__"
 $ VOLUME_TYPE_ID=`openstack volume type show ${VOLUME_TYPE_NAME} -f value -c id`
+$ IMAGE_NAME="cirros"
+$ IMAGE_ID=`openstack image show ${IMAGE_NAME} -f value -c id`
 $ TOKEN=`openstack token issue -f value -c id`
 $ PROJECT_ID=`openstack token issue -f value -c project_id`
 $ CINDER_ENDPOINT="http://172.20.154.249:8776/v3/${PROJECT_ID}"
@@ -155,6 +176,7 @@ $ curl -X POST ${CINDER_ENDPOINT}/volumes \
         \"name\": \"testvolume02\",
         \"description\": \"test volume02\",
         \"volume_type\": \"${VOLUME_TYPE_ID}\",
+        \"imageRef\": \"${IMAGE_ID}\",
         \"availability_zone\": \"nova\",
         \"metadata\": {
             \"key01\": \"value01\",
@@ -172,18 +194,18 @@ $ curl -X POST ${CINDER_ENDPOINT}/volumes \
     "attachments": [],
     "links": [
       {
-        "href": "http://172.20.154.249:8776/v3/3413e9d2302b44058f264258ea0ec41e/volumes/c1d95a07-074f-4d7b-ac68-a54c742401bb",
+        "href": "http://172.20.154.249:8776/v3/3413e9d2302b44058f264258ea0ec41e/volumes/c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550",
         "rel": "self"
       },
       {
-        "href": "http://172.20.154.249:8776/3413e9d2302b44058f264258ea0ec41e/volumes/c1d95a07-074f-4d7b-ac68-a54c742401bb",
+        "href": "http://172.20.154.249:8776/3413e9d2302b44058f264258ea0ec41e/volumes/c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550",
         "rel": "bookmark"
       }
     ],
     "availability_zone": "nova",
     "bootable": "false",
     "encrypted": false,
-    "created_at": "2021-09-18T10:12:37.000000",
+    "created_at": "2021-09-18T10:11:01.000000",
     "description": "test volume02",
     "updated_at": null,
     "volume_type": "__DEFAULT__",
@@ -197,24 +219,24 @@ $ curl -X POST ${CINDER_ENDPOINT}/volumes \
       "key01": "value01",
       "key02": "value02"
     },
-    "id": "c1d95a07-074f-4d7b-ac68-a54c742401bb",
+    "id": "c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550",
     "size": 10
   }
 }
 ```
 ```shell
-$ openstack volume show c1d95a07-074f-4d7b-ac68-a54c742401bb -f json | jq
+$ openstack volume show c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550 -f json | jq
 ```
 ```json
 {
   "attachments": [],
   "availability_zone": "nova",
-  "bootable": "false",
+  "bootable": "true",
   "consistencygroup_id": null,
-  "created_at": "2021-09-18T10:12:37.000000",
+  "created_at": "2021-09-18T10:11:01.000000",
   "description": "test volume02",
   "encrypted": false,
-  "id": "c1d95a07-074f-4d7b-ac68-a54c742401bb",
+  "id": "c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550",
   "migration_status": null,
   "multiattach": false,
   "name": "testvolume02",
@@ -232,7 +254,25 @@ $ openstack volume show c1d95a07-074f-4d7b-ac68-a54c742401bb -f json | jq
   "source_volid": null,
   "status": "available",
   "type": "__DEFAULT__",
-  "updated_at": "2021-09-18T10:12:38.000000",
-  "user_id": "25a3a9d49b914af087aee7b56e2b9d37"
+  "updated_at": "2021-09-18T10:11:02.000000",
+  "user_id": "25a3a9d49b914af087aee7b56e2b9d37",
+  "volume_image_metadata": {
+    "container_format": "bare",
+    "hw_qemu_guest_agent": "no",
+    "owner_specified.openstack.sha256": "63c6e014a024dcc20ec66d11ecbd6c36dd609ff3b6dfaa05cf7d4502614a6923",
+    "image_name": "cirros",
+    "image_id": "4dea6e72-1abf-44a5-87f9-64d3b4172bef",
+    "min_disk": "0",
+    "usage_type": "common",
+    "size": "41126400",
+    "os_distro": "others",
+    "image_type": "image",
+    "checksum": "56730d3091a764d5f8b38feeef0bfcef",
+    "disk_format": "raw",
+    "os_admin_user": "root",
+    "owner_specified.openstack.md5": "56730d3091a764d5f8b38feeef0bfcef",
+    "owner_specified.openstack.object": "images/cirros",
+    "min_ram": "0"
+  }
 }
 ```
