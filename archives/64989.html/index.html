@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.iseeyou.run","root":"/","scheme":"Gemini","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"disqus":{"text":"Load Disqus","order":-1},"gitalk":{"order":-2}},"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。 本文主要介绍从镜像创建云硬盘。 OpenStack 环境安装可以参考官方文档进行搭建：  通过 kolla-ansible 进行容器化部署：https:&#x2F;&#x2F;docs.openstack.org&#x2F;kolla-ansible&#x2F;latest&#x2F; 通过 devstack 进行开发式部署：https:&#x2F;&#x2F;docs.openstack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="创建云硬盘（02）">
+<meta property="og:url" content="http://www.iseeyou.run/archives/64989.html/index.html">
+<meta property="og:site_name" content="小兵辣子">
+<meta property="og:description" content="非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。 本文主要介绍从镜像创建云硬盘。 OpenStack 环境安装可以参考官方文档进行搭建：  通过 kolla-ansible 进行容器化部署：https:&#x2F;&#x2F;docs.openstack.org&#x2F;kolla-ansible&#x2F;latest&#x2F; 通过 devstack 进行开发式部署：https:&#x2F;&#x2F;docs.openstack">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2021-09-16_182117.png">
+<meta property="article:published_time" content="2021-09-18T09:30:15.000Z">
+<meta property="article:modified_time" content="2021-09-18T10:11:34.085Z">
+<meta property="article:author" content="Zhu Boxiang">
+<meta property="article:tag" content="openstack">
+<meta property="article:tag" content="cinder">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2021-09-16_182117.png">
+
+<link rel="canonical" href="http://www.iseeyou.run/archives/64989.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.css"><style>
+#needsharebutton-postbottom {
+  cursor: pointer;
+  height: 26px;
+  margin-top: 10px;
+  position: relative;
+}
+#needsharebutton-postbottom .btn {
+  border: 1px solid $btn-default-border-color;
+  border-radius: 3px;
+  display: initial;
+  padding: 1px 4px;
+}
+</style>
+  <title>创建云硬盘（02） | 小兵辣子</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4dd155aa9975d2f6bc23838bf79e6ed7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小兵辣子</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">小兵虽小，辣子很辣。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">7</span></a>
+
+  </li>
+        <li class="menu-item menu-item-hot">
+
+    <a href="/hot/" rel="section"><i class="fa fa-thermometer-half fa-fw"></i>热度排行</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.iseeyou.run/archives/64989.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Zhu Boxiang">
+      <meta itemprop="description" content="人生苦短，我学 Python">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小兵辣子">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          创建云硬盘（02）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-09-18 17:30:15 / 修改时间：18:11:34" itemprop="dateCreated datePublished" datetime="2021-09-18T17:30:15+08:00">2021-09-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/openstack/" itemprop="url" rel="index"><span itemprop="name">openstack</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/archives/64989.html/" class="post-meta-item leancloud_visitors" data-flag-title="创建云硬盘（02）" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。</strong></p>
+<p><strong>本文主要介绍从镜像创建云硬盘。</strong></p>
+<h2 id="OpenStack-环境"><a href="#OpenStack-环境" class="headerlink" title="OpenStack 环境"></a>OpenStack 环境</h2><p>安装可以参考官方文档进行搭建：</p>
+<ul>
+<li>通过 <code>kolla-ansible</code> 进行容器化部署：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcva29sbGEtYW5zaWJsZS9sYXRlc3Qv">https://docs.openstack.org/kolla-ansible/latest/<i class="fa fa-external-link-alt"></i></span></li>
+<li>通过 <code>devstack</code> 进行开发式部署：<span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcvZGV2c3RhY2svbGF0ZXN0Lw==">https://docs.openstack.org/devstack/latest/<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+<p>命令行工具，通过 <code>pip</code> 进行安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install python-openstackclient</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack --version</span></span><br><span class="line">openstack 5.6.0</span><br></pre></td></tr></table></figure>
+
+<h2 id="命令行方式"><a href="#命令行方式" class="headerlink" title="命令行方式"></a>命令行方式</h2><h3 id="使用-help-命令查看参数"><a href="#使用-help-命令查看参数" class="headerlink" title="使用 help 命令查看参数"></a>使用 help 命令查看参数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack <span class="built_in">help</span> volume create</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://zbx-pic.oss-cn-shanghai.aliyuncs.com/iseeyou/2021-09-16_182117.png" alt="openstack help volume create"></p>
+<h3 id="参数详解"><a href="#参数详解" class="headerlink" title="参数详解"></a>参数详解</h3><ul>
+<li>&lt;name&gt;: 云硬盘名称</li>
+<li>–size: 设置云硬盘的大小，单位为 GiB</li>
+<li>–type: 设置云硬盘的类型</li>
+<li>–image: 镜像名称或者 ID</li>
+<li>–description: 描述信息</li>
+<li>–availability-zone: 目标 AZ</li>
+<li>–property: 设置云硬盘属性，可以使用多次 <code>--property</code> 进行多个设置</li>
+</ul>
+<h3 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> /etc/kolla/admin-openrc.sh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> VOLUME_TYPE_NAME=<span class="string">&quot;__DEFAULT__&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> IMAGE_NAME=<span class="string">&quot;cirros&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack volume create testvolume01 --size 10 --<span class="built_in">type</span> <span class="variable">$&#123;VOLUME_TYPE_NAME&#125;</span> --image <span class="variable">$&#123;IMAGE_NAME&#125;</span> --description <span class="string">&quot;test volume01&quot;</span> --availability-zone nova --property key01=value01 --property key02=value02</span></span><br><span class="line">+---------------------+--------------------------------------+</span><br><span class="line">| Field               | Value                                |</span><br><span class="line">+---------------------+--------------------------------------+</span><br><span class="line">| attachments         | []                                   |</span><br><span class="line">| availability_zone   | nova                                 |</span><br><span class="line">| bootable            | false                                |</span><br><span class="line">| consistencygroup_id | None                                 |</span><br><span class="line">| created_at          | 2021-09-18T10:09:02.000000           |</span><br><span class="line">| description         | test volume01                        |</span><br><span class="line">| encrypted           | False                                |</span><br><span class="line">| id                  | 33461e06-28d1-4a8f-8c6b-09b6e1ade56f |</span><br><span class="line">| migration_status    | None                                 |</span><br><span class="line">| multiattach         | False                                |</span><br><span class="line">| name                | testvolume01                         |</span><br><span class="line">| properties          | key01=&#x27;value01&#x27;, key02=&#x27;value02&#x27;     |</span><br><span class="line">| replication_status  | None                                 |</span><br><span class="line">| size                | 10                                   |</span><br><span class="line">| snapshot_id         | None                                 |</span><br><span class="line">| source_volid        | None                                 |</span><br><span class="line">| status              | creating                             |</span><br><span class="line">| type                | __DEFAULT__                          |</span><br><span class="line">| updated_at          | None                                 |</span><br><span class="line">| user_id             | 25a3a9d49b914af087aee7b56e2b9d37     |</span><br><span class="line">+---------------------+--------------------------------------+</span><br><span class="line"><span class="meta">$</span><span class="bash"> openstack volume show 33461e06-28d1-4a8f-8c6b-09b6e1ade56f -f json | jq</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;attachments&quot;</span>: [],</span><br><span class="line">  <span class="attr">&quot;availability_zone&quot;</span>: <span class="string">&quot;nova&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;bootable&quot;</span>: <span class="string">&quot;true&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;consistencygroup_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;created_at&quot;</span>: <span class="string">&quot;2021-09-18T10:09:02.000000&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;test volume01&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;encrypted&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">&quot;id&quot;</span>: <span class="string">&quot;33461e06-28d1-4a8f-8c6b-09b6e1ade56f&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;migration_status&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;multiattach&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;testvolume01&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-host-attr:host&quot;</span>: <span class="string">&quot;control@rbd-1#rbd-1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-mig-status-attr:migstat&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-mig-status-attr:name_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-tenant-attr:tenant_id&quot;</span>: <span class="string">&quot;3413e9d2302b44058f264258ea0ec41e&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;properties&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;key01&quot;</span>: <span class="string">&quot;value01&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;key02&quot;</span>: <span class="string">&quot;value02&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;replication_status&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;size&quot;</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="attr">&quot;snapshot_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;source_volid&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;status&quot;</span>: <span class="string">&quot;available&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;__DEFAULT__&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;updated_at&quot;</span>: <span class="string">&quot;2021-09-18T10:09:04.000000&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;user_id&quot;</span>: <span class="string">&quot;25a3a9d49b914af087aee7b56e2b9d37&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;volume_image_metadata&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;container_format&quot;</span>: <span class="string">&quot;bare&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;hw_qemu_guest_agent&quot;</span>: <span class="string">&quot;no&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;owner_specified.openstack.sha256&quot;</span>: <span class="string">&quot;63c6e014a024dcc20ec66d11ecbd6c36dd609ff3b6dfaa05cf7d4502614a6923&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;image_name&quot;</span>: <span class="string">&quot;cirros&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;image_id&quot;</span>: <span class="string">&quot;4dea6e72-1abf-44a5-87f9-64d3b4172bef&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;min_disk&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;usage_type&quot;</span>: <span class="string">&quot;common&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;size&quot;</span>: <span class="string">&quot;41126400&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;os_distro&quot;</span>: <span class="string">&quot;others&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;image_type&quot;</span>: <span class="string">&quot;image&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;checksum&quot;</span>: <span class="string">&quot;56730d3091a764d5f8b38feeef0bfcef&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;disk_format&quot;</span>: <span class="string">&quot;raw&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;os_admin_user&quot;</span>: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;owner_specified.openstack.md5&quot;</span>: <span class="string">&quot;56730d3091a764d5f8b38feeef0bfcef&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;owner_specified.openstack.object&quot;</span>: <span class="string">&quot;images/cirros&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;min_ram&quot;</span>: <span class="string">&quot;0&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="RESTful-API-方式"><a href="#RESTful-API-方式" class="headerlink" title="RESTful API 方式"></a>RESTful API 方式</h2><h3 id="API-详解"><a href="#API-详解" class="headerlink" title="API 详解"></a>API 详解</h3><p>API doc: <span class="exturl" data-url="aHR0cHM6Ly9kb2NzLm9wZW5zdGFjay5vcmcvYXBpLXJlZi9ibG9jay1zdG9yYWdlL3YzL2luZGV4Lmh0bWwjY3JlYXRlLWEtdm9sdW1l">https://docs.openstack.org/api-ref/block-storage/v3/index.html#create-a-volume<i class="fa fa-external-link-alt"></i></span></p>
+<p>API: <code>/v3/&#123;project_id&#125;/volumes</code></p>
+<p>Request Body:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;volume&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;size&quot;</span>: <span class="number">10</span>,</span><br><span class="line">        <span class="attr">&quot;volume_type&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;imageRef&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;availability_zone&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;metadata&quot;</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="curl-API"><a href="#curl-API" class="headerlink" title="curl API"></a>curl API</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> /etc/kolla/admin-openrc.sh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> VOLUME_TYPE_NAME=<span class="string">&quot;__DEFAULT__&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> VOLUME_TYPE_ID=`openstack volume <span class="built_in">type</span> show <span class="variable">$&#123;VOLUME_TYPE_NAME&#125;</span> -f value -c id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> IMAGE_NAME=<span class="string">&quot;cirros&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> IMAGE_ID=`openstack image show <span class="variable">$&#123;IMAGE_NAME&#125;</span> -f value -c id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> TOKEN=`openstack token issue -f value -c id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> PROJECT_ID=`openstack token issue -f value -c project_id`</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> CINDER_ENDPOINT=<span class="string">&quot;http://172.20.154.249:8776/v3/<span class="variable">$&#123;PROJECT_ID&#125;</span>&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl -X POST <span class="variable">$&#123;CINDER_ENDPOINT&#125;</span>/volumes \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Accept: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;Content-Type: application/json&quot;</span> \</span></span><br><span class="line"><span class="bash">-H <span class="string">&quot;X-Auth-Token: <span class="variable">$&#123;TOKEN&#125;</span>&quot;</span> \</span></span><br><span class="line"><span class="bash">-d <span class="string">&quot;</span></span></span><br><span class="line">&#123;</span><br><span class="line">    \&quot;volume\&quot;: &#123;</span><br><span class="line">        \&quot;size\&quot;: 10,</span><br><span class="line">        \&quot;name\&quot;: \&quot;testvolume02\&quot;,</span><br><span class="line">        \&quot;description\&quot;: \&quot;test volume02\&quot;,</span><br><span class="line">        \&quot;volume_type\&quot;: \&quot;$&#123;VOLUME_TYPE_ID&#125;\&quot;,</span><br><span class="line">        \&quot;imageRef\&quot;: \&quot;$&#123;IMAGE_ID&#125;\&quot;,</span><br><span class="line">        \&quot;availability_zone\&quot;: \&quot;nova\&quot;,</span><br><span class="line">        \&quot;metadata\&quot;: &#123;</span><br><span class="line">            \&quot;key01\&quot;: \&quot;value01\&quot;,</span><br><span class="line">            \&quot;key02\&quot;: \&quot;value02\&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&quot; | jq</span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;volume&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;status&quot;</span>: <span class="string">&quot;creating&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;migration_status&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;user_id&quot;</span>: <span class="string">&quot;25a3a9d49b914af087aee7b56e2b9d37&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;attachments&quot;</span>: [],</span><br><span class="line">    <span class="attr">&quot;links&quot;</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;href&quot;</span>: <span class="string">&quot;http://172.20.154.249:8776/v3/3413e9d2302b44058f264258ea0ec41e/volumes/c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;rel&quot;</span>: <span class="string">&quot;self&quot;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;href&quot;</span>: <span class="string">&quot;http://172.20.154.249:8776/3413e9d2302b44058f264258ea0ec41e/volumes/c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;rel&quot;</span>: <span class="string">&quot;bookmark&quot;</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">&quot;availability_zone&quot;</span>: <span class="string">&quot;nova&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;bootable&quot;</span>: <span class="string">&quot;false&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;encrypted&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;created_at&quot;</span>: <span class="string">&quot;2021-09-18T10:11:01.000000&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;test volume02&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;updated_at&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;volume_type&quot;</span>: <span class="string">&quot;__DEFAULT__&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;testvolume02&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;replication_status&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;consistencygroup_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;source_volid&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;snapshot_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">    <span class="attr">&quot;multiattach&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">&quot;metadata&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;key01&quot;</span>: <span class="string">&quot;value01&quot;</span>,</span><br><span class="line">      <span class="attr">&quot;key02&quot;</span>: <span class="string">&quot;value02&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">&quot;id&quot;</span>: <span class="string">&quot;c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;size&quot;</span>: <span class="number">10</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> openstack volume show c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550 -f json | jq</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;attachments&quot;</span>: [],</span><br><span class="line">  <span class="attr">&quot;availability_zone&quot;</span>: <span class="string">&quot;nova&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;bootable&quot;</span>: <span class="string">&quot;true&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;consistencygroup_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;created_at&quot;</span>: <span class="string">&quot;2021-09-18T10:11:01.000000&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;description&quot;</span>: <span class="string">&quot;test volume02&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;encrypted&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">&quot;id&quot;</span>: <span class="string">&quot;c9ad8365-fa2a-4dbc-9f1c-6ffad2a58550&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;migration_status&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;multiattach&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">&quot;name&quot;</span>: <span class="string">&quot;testvolume02&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-host-attr:host&quot;</span>: <span class="string">&quot;control@rbd-1#rbd-1&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-mig-status-attr:migstat&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-mig-status-attr:name_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;os-vol-tenant-attr:tenant_id&quot;</span>: <span class="string">&quot;3413e9d2302b44058f264258ea0ec41e&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;properties&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;key01&quot;</span>: <span class="string">&quot;value01&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;key02&quot;</span>: <span class="string">&quot;value02&quot;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;replication_status&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;size&quot;</span>: <span class="number">10</span>,</span><br><span class="line">  <span class="attr">&quot;snapshot_id&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;source_volid&quot;</span>: <span class="literal">null</span>,</span><br><span class="line">  <span class="attr">&quot;status&quot;</span>: <span class="string">&quot;available&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;type&quot;</span>: <span class="string">&quot;__DEFAULT__&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;updated_at&quot;</span>: <span class="string">&quot;2021-09-18T10:11:02.000000&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;user_id&quot;</span>: <span class="string">&quot;25a3a9d49b914af087aee7b56e2b9d37&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;volume_image_metadata&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;container_format&quot;</span>: <span class="string">&quot;bare&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;hw_qemu_guest_agent&quot;</span>: <span class="string">&quot;no&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;owner_specified.openstack.sha256&quot;</span>: <span class="string">&quot;63c6e014a024dcc20ec66d11ecbd6c36dd609ff3b6dfaa05cf7d4502614a6923&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;image_name&quot;</span>: <span class="string">&quot;cirros&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;image_id&quot;</span>: <span class="string">&quot;4dea6e72-1abf-44a5-87f9-64d3b4172bef&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;min_disk&quot;</span>: <span class="string">&quot;0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;usage_type&quot;</span>: <span class="string">&quot;common&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;size&quot;</span>: <span class="string">&quot;41126400&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;os_distro&quot;</span>: <span class="string">&quot;others&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;image_type&quot;</span>: <span class="string">&quot;image&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;checksum&quot;</span>: <span class="string">&quot;56730d3091a764d5f8b38feeef0bfcef&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;disk_format&quot;</span>: <span class="string">&quot;raw&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;os_admin_user&quot;</span>: <span class="string">&quot;root&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;owner_specified.openstack.md5&quot;</span>: <span class="string">&quot;56730d3091a764d5f8b38feeef0bfcef&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;owner_specified.openstack.object&quot;</span>: <span class="string">&quot;images/cirros&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;min_ram&quot;</span>: <span class="string">&quot;0&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    <div class="post-widgets">
+      <div id="needsharebutton-postbottom">
+        <span class="btn">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+        </span>
+      </div>
+    </div>
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Zhu Boxiang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.iseeyou.run/archives/64989.html/" title="创建云硬盘（02）">http://www.iseeyou.run/archives/64989.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/openstack/" rel="tag"><i class="fa fa-tag"></i> openstack</a>
+              <a href="/tags/cinder/" rel="tag"><i class="fa fa-tag"></i> cinder</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/48427.html/" rel="prev" title="Makefile 中的 Shell 变量设置">
+      <i class="fa fa-chevron-left"></i> Makefile 中的 Shell 变量设置
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OpenStack-%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">OpenStack 环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">命令行方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-help-%E5%91%BD%E4%BB%A4%E6%9F%A5%E7%9C%8B%E5%8F%82%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">使用 help 命令查看参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.2.</span> <span class="nav-text">参数详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">2.3.</span> <span class="nav-text">执行命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESTful-API-%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">RESTful API 方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#API-%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.1.</span> <span class="nav-text">API 详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#curl-API"><span class="nav-number">3.2.</span> <span class="nav-text">curl API</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhu Boxiang"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Zhu Boxiang</p>
+  <div class="site-description" itemprop="description">人生苦短，我学 Python</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3podWJ4MDA3" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhubx007"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmJ4emh1XzUzNTVAMTYzLmNvbQ==" title="E-Mail → mailto:bxzhu_5355@163.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></span>
+  </div>
+
+
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">标签云</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width:100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/bucket/" rel="tag">bucket</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ceph/" rel="tag">ceph</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cinder/" rel="tag">cinder</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kolla-ansible/" rel="tag">kolla-ansible</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/makefile/" rel="tag">makefile</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openstack/" rel="tag">openstack</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pip/" rel="tag">pip</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhu Boxiang</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">29k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">26 分钟</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"RrHBB64bDBuubdoFxkbTTi9e-gzGzoHsz","app_key":"Mon6AI4q4CEaNN8rkz5tiejI","server_url":"https://leancloud.cn","security":false};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+  <script>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id    : 32142,
+      el    : 'wpac-rating',
+      color : 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+  <script>
+    (function(d, w, c) {
+      w.ChatraID = 'vhWbZHaKCpJibk7mv';
+      var s = d.createElement('script');
+      w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+      };
+      s.async = true;
+      s.src = 'https://call.chatra.io/chatra.js';
+      if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+  </script>
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: 'unset',
+  left: '32px',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-needmoreshare2@1/needsharebutton.min.js"></script>
+  <script>
+      pbOptions = {};
+        pbOptions.iconStyle = "default";
+        pbOptions.boxForm = "horizontal";
+        pbOptions.position = "middleCenter";
+        pbOptions.networks = "Weibo,Wechat,Douban,QQZone,Twitter,Facebook";
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+  </script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '18e9b322141f91c97b85',
+      clientSecret: 'a930a0b94ccd8e494abd6f171c23fe5b2d92a7df',
+      repo        : 'mygitalk',
+      owner       : 'zhubx007',
+      admin       : ['zhubx007'],
+      id          : 'a8367eaaa46bc3eb07f62857a9e59ec0',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
