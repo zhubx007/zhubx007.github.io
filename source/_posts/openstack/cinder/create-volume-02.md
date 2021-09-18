@@ -1,11 +1,12 @@
 ---
 title: 创建云硬盘（02）
-date: 2021-09-18 17:30:15
 tags:
-- cinder
-- openstack
+  - cinder
+  - openstack
 categories:
-- openstack
+  - openstack
+abbrlink: 64989
+date: 2021-09-18 17:30:15
 ---
 
 **非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。**
