@@ -13,7 +13,7 @@ timezone: 'Asia/Shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://www.iseeyou.run
+url: https://www.iseeyou.run
 # permalink: :year/:month/:day/:title/
 permalink: archives/:abbrlink.html/
 permalink_defaults:
@@ -115,7 +115,7 @@ search:
   format: html
 
 excerpt:
-  depth: 5
+  depth: 2
   excerpt_excludes: []
   more_excludes: []
   hideWholePostExcerpts: true
