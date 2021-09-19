@@ -265,6 +265,12 @@
 
 <h2 id="7-验证"><a href="#7-验证" class="headerlink" title="7. 验证"></a>7. 验证</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install &lt;pkgs&gt;</span></span><br></pre></td></tr></table></figure>
 ]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>pip</tag>
+      </tags>
   </entry>
   <entry>
     <title>创建云硬盘（01）</title>
