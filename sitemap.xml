@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://notes.iseeyou.run/archives/30029.html/</loc>
+    
+    <lastmod>2021-09-19</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://notes.iseeyou.run/archives/64989.html/</loc>
     
     <lastmod>2021-09-18</lastmod>
@@ -37,28 +44,7 @@
   </url>
   
   <url>
-    <loc>https://notes.iseeyou.run/archives/24828.html/</loc>
-    
-    <lastmod>2021-09-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://notes.iseeyou.run/archives/39470.html/</loc>
-    
-    <lastmod>2021-09-18</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://notes.iseeyou.run/about/index.html</loc>
-    
-    <lastmod>2021-09-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://notes.iseeyou.run/hot/index.html</loc>
     
     <lastmod>2021-09-18</lastmod>
     
@@ -72,7 +58,28 @@
   </url>
   
   <url>
+    <loc>https://notes.iseeyou.run/hot/index.html</loc>
+    
+    <lastmod>2021-09-18</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://notes.iseeyou.run/tags/index.html</loc>
+    
+    <lastmod>2021-09-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://notes.iseeyou.run/archives/24828.html/</loc>
+    
+    <lastmod>2021-09-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://notes.iseeyou.run/archives/39470.html/</loc>
     
     <lastmod>2021-09-18</lastmod>
     
@@ -81,7 +88,7 @@
 
   <url>
     <loc>https://notes.iseeyou.run/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -89,63 +96,63 @@
   
   <url>
     <loc>https://notes.iseeyou.run/tags/ceph/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/pip/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/bucket/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/centos/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/kolla-ansible/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/openstack/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/linux/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/makefile/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/tags/cinder/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -154,21 +161,21 @@
   
   <url>
     <loc>https://notes.iseeyou.run/categories/ceph/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/categories/linux/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://notes.iseeyou.run/categories/openstack/</loc>
-    <lastmod>2021-09-18</lastmod>
+    <lastmod>2021-09-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

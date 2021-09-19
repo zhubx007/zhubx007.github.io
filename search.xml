@@ -249,6 +249,24 @@
       </tags>
   </entry>
   <entry>
+    <title>搭建 pip 本地源</title>
+    <url>/archives/30029.html/</url>
+    <content><![CDATA[<h2 id="1-安装pip命令"><a href="#1-安装pip命令" class="headerlink" title="1. 安装pip命令"></a>1. 安装pip命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yum install epel-release -y</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum makecache</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install python-pip -y</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-使用pip-download命令下载包以及相关依赖包"><a href="#2-使用pip-download命令下载包以及相关依赖包" class="headerlink" title="2. 使用pip download命令下载包以及相关依赖包"></a>2. 使用pip download命令下载包以及相关依赖包</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /opt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pip download &lt;pkgs&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-将所有的包，放置到一个目录下，例如-opt-pypi下"><a href="#3-将所有的包，放置到一个目录下，例如-opt-pypi下" class="headerlink" title="3. 将所有的包，放置到一个目录下，例如/opt/pypi下"></a>3. 将所有的包，放置到一个目录下，例如/opt/pypi下</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /opt/pypi</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mv * /opt/pypi</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-安装pip2pi"><a href="#4-安装pip2pi" class="headerlink" title="4. 安装pip2pi"></a>4. 安装pip2pi</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install pip2pi</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-制作本地源"><a href="#5-制作本地源" class="headerlink" title="5. 制作本地源"></a>5. 制作本地源</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /opt</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> dir2pi pypi</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置pip-conf"><a href="#6-配置pip-conf" class="headerlink" title="6. 配置pip.conf"></a>6. 配置pip.conf</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir -p /root/.pip</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat &gt;/root/.pip/pip.conf &lt;&lt;<span class="string">END</span></span></span><br><span class="line">[global]</span><br><span class="line">index-url = file:///opt/pypi/simple</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-验证"><a href="#7-验证" class="headerlink" title="7. 验证"></a>7. 验证</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install &lt;pkgs&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
     <title>创建云硬盘（01）</title>
     <url>/archives/24690.html/</url>
     <content><![CDATA[<p><strong>非概念型介绍，而是通过命令行或者 RESTful API 进行实际操作讲解。</strong></p>
