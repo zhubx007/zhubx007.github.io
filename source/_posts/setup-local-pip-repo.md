@@ -8,37 +8,37 @@ categories:
   - linux
 ---
 
-## 1. 安装pip命令
+## 安装 pip 命令
 ```shell
 $ yum install epel-release -y
 $ yum makecache
 $ yum install python-pip -y
 ```
 
-## 2. 使用pip download命令下载包以及相关依赖包
+## 使用 `pip download` 命令下载包以及相关依赖包
 ```shell
 $ cd /opt
 $ pip download <pkgs>
 ```
 
-## 3. 将所有的包，放置到一个目录下，例如/opt/pypi下
+## 将所有的包，放置到一个目录下，例如 `/opt/pypi` 下
 ```shell
 $ mkdir -p /opt/pypi
 $ mv * /opt/pypi
 ```
 
-## 4. 安装pip2pi
+## 安装 pip2pi
 ```shell
 $ pip install pip2pi
 ```
 
-## 5. 制作本地源
+## 制作本地源
 ```shell
 $ cd /opt
 $ dir2pi pypi
 ```
 
-## 6. 配置pip.conf
+## 配置 pip.conf
 ```shell
 $ mkdir -p /root/.pip
 $ cat >/root/.pip/pip.conf <<END
@@ -47,7 +47,7 @@ index-url = file:///opt/pypi/simple
 END
 ```
 
-## 7. 验证
+## 验证
 ```shell
 $ pip install <pkgs>
 ```
