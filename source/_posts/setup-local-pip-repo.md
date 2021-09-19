@@ -1,0 +1,50 @@
+---
+title: 搭建 pip 本地源
+date: 2021-09-19 21:19:00
+tags:
+categories:
+---
+
+## 1. 安装pip命令
+```shell
+$ yum install epel-release -y
+$ yum makecache
+$ yum install python-pip -y
+```
+
+## 2. 使用pip download命令下载包以及相关依赖包
+```shell
+$ cd /opt
+$ pip download <pkgs>
+```
+
+## 3. 将所有的包，放置到一个目录下，例如/opt/pypi下
+```shell
+$ mkdir -p /opt/pypi
+$ mv * /opt/pypi
+```
+
+## 4. 安装pip2pi
+```shell
+$ pip install pip2pi
+```
+
+## 5. 制作本地源
+```shell
+$ cd /opt
+$ dir2pi pypi
+```
+
+## 6. 配置pip.conf
+```shell
+$ mkdir -p /root/.pip
+$ cat >/root/.pip/pip.conf <<END
+[global]
+index-url = file:///opt/pypi/simple
+END
+```
+
+## 7. 验证
+```shell
+$ pip install <pkgs>
+```
