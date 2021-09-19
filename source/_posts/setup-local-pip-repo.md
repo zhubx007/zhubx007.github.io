@@ -1,8 +1,11 @@
 ---
 title: 搭建 pip 本地源
+abbrlink: 30029
 date: 2021-09-19 21:19:00
 tags:
+  - pip
 categories:
+  - linux
 ---
 
 ## 1. 安装pip命令
