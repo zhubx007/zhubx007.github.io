@@ -81,21 +81,6 @@
       </tags>
   </entry>
   <entry>
-    <title>获取某个 Bucket 下的分片信息</title>
-    <url>/archives/22614.html/</url>
-    <content><![CDATA[<h1 id="获取-bucket-id"><a href="#获取-bucket-id" class="headerlink" title="获取 bucket id"></a>获取 bucket id</h1><figure class="highlight console"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_NAME=<span class="string">&quot;bucket01&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_ID=`radosgw-admin bucket stats --bucket=<span class="variable">$&#123;BUCKET_NAME&#125;</span> | grep -w id | awk -F <span class="string">&#x27;&quot;&#x27;</span> <span class="string">&#x27;&#123;print $4&#125;&#x27;</span>`</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="查看-bucket-index-中的-omap-信息"><a href="#查看-bucket-index-中的-omap-信息" class="headerlink" title="查看 bucket.index 中的 omap 信息"></a>查看 bucket.index 中的 omap 信息</h1><figure class="highlight console"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> INDEX_POOL=<span class="string">&quot;default.rgw.buckets.index&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> OBJECT_MAP=<span class="string">&quot;.dir.<span class="variable">$&#123;BUCKET_ID&#125;</span>&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rados -p <span class="variable">$&#123;INDEX_POOL&#125;</span> listomapkeys <span class="variable">$&#123;OBJECT_MAP&#125;</span></span></span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.1</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.2</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.3</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.4</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.meta</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>ceph</category>
-      </categories>
-      <tags>
-        <tag>ceph</tag>
-        <tag>bucket</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CentOS 中使用 kolla-ansible 快速部署 OpenStack All-In-One</title>
     <url>/archives/60765.html/</url>
     <content><![CDATA[<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><hr>
@@ -407,6 +392,21 @@
       <tags>
         <tag>openstack</tag>
         <tag>cinder</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>获取某个 Bucket 下的分片信息</title>
+    <url>/archives/22614.html/</url>
+    <content><![CDATA[<h1 id="获取-bucket-id"><a href="#获取-bucket-id" class="headerlink" title="获取 bucket id"></a>获取 bucket id</h1><figure class="highlight console"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_NAME=<span class="string">&quot;bucket01&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> BUCKET_ID=`radosgw-admin bucket stats --bucket=<span class="variable">$&#123;BUCKET_NAME&#125;</span> | grep -w id | awk -F <span class="string">&#x27;&quot;&#x27;</span> <span class="string">&#x27;&#123;print $4&#125;&#x27;</span>`</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="查看-bucket-index-中的-omap-信息"><a href="#查看-bucket-index-中的-omap-信息" class="headerlink" title="查看 bucket.index 中的 omap 信息"></a>查看 bucket.index 中的 omap 信息</h1><figure class="highlight console"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> INDEX_POOL=<span class="string">&quot;default.rgw.buckets.index&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> OBJECT_MAP=<span class="string">&quot;.dir.<span class="variable">$&#123;BUCKET_ID&#125;</span>&quot;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> rados -p <span class="variable">$&#123;INDEX_POOL&#125;</span> listomapkeys <span class="variable">$&#123;OBJECT_MAP&#125;</span></span></span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.1</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.2</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.3</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.4</span><br><span class="line">_multipart_software/DingTalk_v4.5.5.18.exe.2~WG7XrXpvoUIfH9a1Sa8cChNsIfRMUNU.meta</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>ceph</category>
+      </categories>
+      <tags>
+        <tag>ceph</tag>
+        <tag>bucket</tag>
       </tags>
   </entry>
   <entry>
